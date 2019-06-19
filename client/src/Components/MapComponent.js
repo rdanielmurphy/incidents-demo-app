@@ -3,6 +3,15 @@ import './MapComponent.css';
 import { Map, TileLayer, Marker, Popup } from 'react-leaflet';
 import IncidentsService from '../Services/IncidentsService';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import EnrichService from '../Services/EnrichService';
+import Paper from '@material-ui/core/Paper';
+
+function keyToTitle(key) {
+    return key.toLowerCase()
+        .split('_')
+        .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+        .join(' ');
+}
 
 const KeyValueDisplay = ({ data }) =>
     Object.entries(data).map(([k, v]) => {
@@ -13,9 +22,9 @@ const KeyValueDisplay = ({ data }) =>
         }
         return (
             <tr key={k}>
-                <td>{k}</td>
+                <td width="30%"><b>{keyToTitle(k)}</b></td>
                 <td>{v}</td>
-            </tr>
+            </tr >
         )
     });
 
@@ -28,16 +37,24 @@ class MapComponent extends Component {
             lng: -77.5,
             zoom: 10,
             incident: null,
-            loaded: false
+            loaded: false,
+            weather: {}
         }
+    }
 
+    componentDidMount() {
+        const scope = this;
         IncidentsService.getIncident(this.props.match.params.i).then((incident) => {
-            this.setState({
-                lat: incident.address.latitude,
-                lng: incident.address.longitude,
-                zoom: 16,
-                incident: incident,
-                loaded: true
+            EnrichService.getWeather(incident.address.latitude, incident.address.longitude, incident.description.event_opened).then((weather) => {
+                console.log(weather);
+                scope.setState({
+                    lat: incident.address.latitude,
+                    lng: incident.address.longitude,
+                    zoom: 16,
+                    incident: incident,
+                    loaded: true,
+                    weather: weather
+                });
             });
         });
     }
@@ -68,11 +85,23 @@ class MapComponent extends Component {
                             </Popup>
                         </Marker>
                     </Map>
-                    <div className="details">
+                    <Paper className="details">
                         <h3>Description</h3>
                         <table>
                             <tbody>
                                 <KeyValueDisplay data={this.state.incident.description} />
+                                <tr>
+                                    <td><b>Forecast</b></td>
+                                    <td>{this.state.weather.currently.summary}<img alt="weather" src={this.state.weather.icon}></img></td>
+                                </tr>
+                                <tr>
+                                    <td><b>Temperature</b></td>
+                                    <td>{this.state.weather.currently.temperature}</td>
+                                </tr>
+                                <tr>
+                                    <td><b>Probability of percipitation</b></td>
+                                    <td>{this.state.weather.currently.precipProbability + "%"}</td>
+                                </tr>
                             </tbody>
                         </table>
                         <h3>Fire Department</h3>
@@ -81,7 +110,7 @@ class MapComponent extends Component {
                                 <KeyValueDisplay data={this.state.incident.fire_department} />
                             </tbody>
                         </table>
-                    </div>
+                    </Paper>
                 </div>
             );
         }
