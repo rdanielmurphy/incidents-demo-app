@@ -6,6 +6,7 @@ import path from 'path';
 // Import required modules
 import serverConfig from './config';
 import incidents from './routes/incidents.routes';
+import enrich from './routes/enrich.routes';
 
 // Initialize the Express App
 const app = new Express();
@@ -41,6 +42,7 @@ app.use(bodyParser.json({ limit: '20mb' }));
 app.use(bodyParser.urlencoded({ limit: '20mb', extended: false }));
 app.use(Express.static(path.resolve(__dirname, '../dist/client')));
 app.use('/api', incidents);
+app.use('/api', enrich);
 
 // start app
 app.listen(serverConfig.port, (error) => {
