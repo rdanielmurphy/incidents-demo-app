@@ -2,7 +2,7 @@ const request = require('request');
 
 const weatherAPIKey = "b18c7f1cf78ed9c5822238abeb8d5196";
 const geocodingAPIKey = "9805915b9fa7414f83a20e7030c90204";
-//AIzaSyCK5sQlZuEPZB1ftAL3DhYBNN5jhy0lUHg
+//TODO const placesAPI = "";
 
 const icon_mapping = {
     "clear-day": "01d.png",
