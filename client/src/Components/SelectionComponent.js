@@ -58,6 +58,7 @@ class SelectionComponent extends Component {
                         }
                     </Select>
                     <br></br>
+                    <br></br>
                     <Button onClick={this.startIncidentClick.bind(this)}>Start Incident</Button>
                 </div>
             );
