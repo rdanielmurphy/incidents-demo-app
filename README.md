@@ -7,8 +7,15 @@ Displays data from incident and enriches with weather data.  Didn't get a chance
 
 Click an apparatus at bottom to see the route it took.
 
+~5 hours of coding spent so far
+
 ### To run: ###
 ```
  docker-compose build
  docker-compose up
 ```
+
+### Screen shots ###
+![Alt text](screenshots/screenshot1.png "Title")
+![Alt text](screenshots/screenshot2.png "Title")
+![Alt text](screenshots/screenshot3.png "Title")
